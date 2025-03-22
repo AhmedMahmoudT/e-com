@@ -6,7 +6,7 @@ const Navbar = () => {
     const currentPath = usePathname()
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <div className="flex h-16 w-full items-center justify-center bg-black text-white">
+      <div className="flex h-12 w-full items-center justify-center bg-black text-white">
         <div className="flex w-[60vw] items-center justify-between">
           <p>Free shipping, 30-day return or refund guarantee.</p>
           <div className="flex items-center justify-center gap-10 tracking-[.20rem]">
