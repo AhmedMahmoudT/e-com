@@ -19,11 +19,11 @@ const Model = () => {
     mesh.current.rotation.y += 0.02;
 
     if (ascending) {
-      setX((prev) => prev + 0.025);
-      setY((prev) => prev + 0.025);
+      setX((prev) => prev + 0.05);
+      setY((prev) => prev + 0.05);
     } else {
-      setX((prev) => prev - 0.025);
-      setY((prev) => prev - 0.025);
+      setX((prev) => prev - 0.05);
+      setY((prev) => prev - 0.05);
     }
   });
   return (
