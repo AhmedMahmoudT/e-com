@@ -8,6 +8,7 @@ const Model = () => {
   const [x, setX] = useState(1);
   const [y, setY] = useState(1);
   const [ascending, setAscending] = useState(true);
+
   useFrame(() => {
     if (x >= 10) {
       setAscending(false);
@@ -27,13 +28,13 @@ const Model = () => {
     }
   });
   return (
-    <group scale={0.9}>
+    <group>
       <Text
         position={[0, 0, -5]}
-        fontSize={4}
+        fontSize={2}
         font="fonts/DelaGothicOne-Regular.ttf"
       >
-        Discover your Taste
+        Discover your Taest
       </Text>
 
       <Sphere
@@ -41,16 +42,9 @@ const Model = () => {
         color="#008BDE"
         opacity={0.5}
         transparent={true}
+        currentWidth={1}
         mesh={mesh}
       />
-
-      {/* <Cube
-        args={[3, 3, 3]}
-        color="purple"
-        opacity={.75}
-        transparent={true}
-        mesh={mesh}
-      /> */}
 
     </group>
   );
@@ -68,10 +62,11 @@ type GeometryTypes = {
   color: string;
   opacity: number;
   transparent: boolean;
+  currentWidth: number;
   mesh: MutableRefObject<THREE.Mesh>;
 };
 
-const Cube = ({ args, color, opacity, transparent, mesh }: GeometryTypes) => {
+const Cube = ({ args, color, opacity, transparent, mesh, currentWidth }: GeometryTypes) => {
   return (
     <mesh ref={mesh}>
       <boxGeometry args={args} />
@@ -84,9 +79,9 @@ const Cube = ({ args, color, opacity, transparent, mesh }: GeometryTypes) => {
   );
 };
 
-const Sphere = ({ args, color, opacity, transparent, mesh }: GeometryTypes) => {
+const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth }: GeometryTypes) => {
   return (
-    <mesh ref={mesh}>
+    <mesh ref={mesh} scale={currentWidth}>
       <sphereGeometry args={args} />
       <meshStandardMaterial
         color={color}

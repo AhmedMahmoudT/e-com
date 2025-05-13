@@ -6,15 +6,15 @@ import Model from "./_components/Model";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-[50vh] flex-col items-center justify-center overflow-hidden">
+    <main className="flex min-h-[500px] flex-col items-center justify-center w-screen">
       <Image
         src={"/cloudless.png"}
         alt=""
         width={4016}
         height={540}
-        className="absolute top-0 -z-10 h-[50vh] w-[100vw]"
+        className="absolute top-0 -z-10 h-[500px] w-screen"
       />
-      <Canvas style={{ width: "50vw", height: "25vh", position: "absolute", top:200 }}>
+      <Canvas style={{ width: "100vw", height: "250px", position: "absolute", top:200 }}>
         <ambientLight intensity={0.5} />
         <Environment 
         preset="park"
