@@ -1,13 +1,18 @@
 "use client"
 import React from "react"
-import Navbar from "./_components/Navbar"
+import Navbar, { NavbarMobile } from "./_components/Navbar"
 
 const LayoutClient = ({
     children,
   }: Readonly<{ children: React.ReactNode }>) => {
   return (
-    <div className="flex flex-col items-center">
-        <Navbar />
+    <div>
+        <div className="block lg:hidden">
+          <NavbarMobile />
+        </div>
+        <div className="hidden lg:block">
+          <Navbar />
+        </div>
         <div>{children}</div>
     </div>
   )
