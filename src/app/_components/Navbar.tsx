@@ -11,7 +11,7 @@ import { useState } from "react";
 const Navbar = () => {
   const currentPath = usePathname();
   return (
-    <div className="flex w-screen flex-col items-center justify-center">
+    <div className="flex w-full flex-col items-center justify-center">
       <div className="flex h-12 w-full items-center justify-center bg-black/50 text-white">
         <div className="flex w-[70vw] items-center justify-between">
           <p>Free shipping, 30-day return or refund guarantee.</p>
