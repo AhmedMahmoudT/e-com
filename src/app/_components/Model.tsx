@@ -31,7 +31,7 @@ const Model = () => {
     <group>
       <Text
         position={[0, 0, -5]}
-        fontSize={2}
+        fontSize={1.75}
         font="fonts/DelaGothicOne-Regular.ttf"
       >
         Discover your Taest
@@ -42,7 +42,7 @@ const Model = () => {
         color="#008BDE"
         opacity={0.5}
         transparent={true}
-        currentWidth={1}
+        currentWidth={.75}
         mesh={mesh}
       />
 
