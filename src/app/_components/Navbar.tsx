@@ -22,7 +22,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex h-20 w-full items-center justify-center text-white">
+      <div className={`flex h-20 w-full items-center justify-center text-white ${currentPath !== "/" && "bg-black"}`}>
         <div className="flex w-[70vw] items-center justify-between">
           <Link href={"/"} className="text-2xl font-bold tracking-widest">
             Taest

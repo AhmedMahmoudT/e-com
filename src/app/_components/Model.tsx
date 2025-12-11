@@ -3,30 +3,50 @@ import { Text } from "@react-three/drei";
 import { useRef, useState, type MutableRefObject } from "react";
 import type * as THREE from "three";
 
-const Model = () => {
+type ModelProps = {
+  mouseX: number;
+  isHovering: boolean;
+  color: string | undefined;
+};
+
+const Model = ({ mouseX, isHovering, color }: ModelProps) => {
   const mesh = useRef<THREE.Mesh>(null!);
   const [x, setX] = useState(1);
   const [y, setY] = useState(1);
   const [ascending, setAscending] = useState(true);
 
   useFrame(() => {
-    if (x >= 10) {
-      setAscending(false);
-    }
-    if (x <= 1) {
-      setAscending(true);
-    }
     mesh.current.rotation.x += 0.02;
     mesh.current.rotation.y += 0.02;
 
-    if (ascending) {
-      setX((prev) => prev + 0.05);
-      setY((prev) => prev + 0.05);
+    if (isHovering) {
+      // When hovering, control x/y based on cursor position
+      // mouseX ranges from -1 (left) to 1 (right)
+      // Map it to a target value between 1 and 10
+      const targetValue = 1 + (mouseX + 1) * 4.5; // Maps -1..1 to 1..10
+
+      // Smoothly interpolate towards target
+      setX((prev) => prev + (targetValue - prev) * 0.5);
+      setY((prev) => prev + (targetValue - prev) * 0.5);
     } else {
-      setX((prev) => prev - 0.05);
-      setY((prev) => prev - 0.05);
+      // Default animation when not hovering
+      if (x >= 10) {
+        setAscending(false);
+      }
+      if (x <= 1) {
+        setAscending(true);
+      }
+
+      if (ascending) {
+        setX((prev) => prev + 0.05);
+        setY((prev) => prev + 0.05);
+      } else {
+        setX((prev) => prev - 0.05);
+        setY((prev) => prev - 0.05);
+      }
     }
   });
+
   return (
     <group>
       <Text
@@ -39,7 +59,7 @@ const Model = () => {
 
       <Sphere
         args={[3, x, y]}
-        color="#008BDE"
+        color={color ?? "#008BDE"}
         opacity={0.5}
         transparent={true}
         currentWidth={.75}
@@ -50,7 +70,7 @@ const Model = () => {
   );
 };
 
-type GeometryTypes = {
+type SphereCubeTypes = {
   args: [
     width?: number,
     height?: number,
@@ -66,20 +86,33 @@ type GeometryTypes = {
   mesh: MutableRefObject<THREE.Mesh>;
 };
 
-const Cube = ({ args, color, opacity, transparent, mesh, currentWidth }: GeometryTypes) => {
-  return (
-    <mesh ref={mesh}>
-      <boxGeometry args={args} />
-      <meshStandardMaterial
-        color={color}
-        opacity={opacity}
-        transparent={transparent}
-      />
-    </mesh>
-  );
+type TetrahedronTypes = {
+    args: [
+        radius?: number,
+        detail?: number,
+    ];
+    color: string;
+    opacity: number;
+    transparent: boolean;
+    currentWidth: number;
+    mesh: MutableRefObject<THREE.Mesh>;
 };
 
-const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth }: GeometryTypes) => {
+type CylinderTypes = {
+    args: [
+        radiusTop?: number,
+        radiusBottom?: number,
+        height?: number,
+        radialSegments?: number,
+    ];
+    color: string;
+    opacity: number;
+    transparent: boolean;
+    currentWidth: number;
+    mesh: MutableRefObject<THREE.Mesh>;
+};
+
+export const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth }: SphereCubeTypes) => {
   return (
     <mesh ref={mesh} scale={currentWidth}>
       <sphereGeometry args={args} />
@@ -90,6 +123,45 @@ const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth }: Geome
       />
     </mesh>
   );
+};
+
+export const Cube = ({ args, color, opacity, transparent, mesh, currentWidth }: SphereCubeTypes) => {
+  return (
+    <mesh ref={mesh} scale={currentWidth}>
+      <boxGeometry args={args} />
+      <meshStandardMaterial
+        color={color}
+        opacity={opacity}
+        transparent={transparent}
+      />
+    </mesh>
+  );
+};
+
+export const Tetrahedron = ({ args, color, opacity, transparent, mesh, currentWidth }: TetrahedronTypes) => {
+    return (
+        <mesh ref={mesh} scale={currentWidth}>
+            <tetrahedronGeometry args={args} />
+            <meshStandardMaterial
+                color={color}
+                opacity={opacity}
+                transparent={transparent}
+            />
+        </mesh>
+    );
+};
+
+export const Cylinder = ({ args, color, opacity, transparent, mesh, currentWidth }: CylinderTypes) => {
+    return (
+        <mesh ref={mesh} scale={currentWidth}>
+            <cylinderGeometry args={args} />
+            <meshStandardMaterial
+                color={color}
+                opacity={opacity}
+                transparent={transparent}
+            />
+        </mesh>
+    );
 };
 
 export default Model;
