@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { Text, Edges } from "@react-three/drei";
 import { useRef, useState, type MutableRefObject } from "react";
 import type * as THREE from "three";
 
@@ -64,6 +64,7 @@ const Model = ({ mouseX, isHovering, color }: ModelProps) => {
         transparent={true}
         currentWidth={.75}
         mesh={mesh}
+        edges={false}
       />
 
     </group>
@@ -84,35 +85,50 @@ type SphereCubeTypes = {
   transparent: boolean;
   currentWidth: number;
   mesh: MutableRefObject<THREE.Mesh>;
+  edges?: boolean;
 };
 
 type TetrahedronTypes = {
-    args: [
-        radius?: number,
-        detail?: number,
-    ];
-    color: string;
-    opacity: number;
-    transparent: boolean;
-    currentWidth: number;
-    mesh: MutableRefObject<THREE.Mesh>;
+  args: [
+    radius?: number,
+    detail?: number,
+  ];
+  color: string;
+  opacity: number;
+  transparent: boolean;
+  currentWidth: number;
+  mesh: MutableRefObject<THREE.Mesh>;
 };
 
 type CylinderTypes = {
-    args: [
-        radiusTop?: number,
-        radiusBottom?: number,
-        height?: number,
-        radialSegments?: number,
-    ];
-    color: string;
-    opacity: number;
-    transparent: boolean;
-    currentWidth: number;
-    mesh: MutableRefObject<THREE.Mesh>;
+  args: [
+    radiusTop?: number,
+    radiusBottom?: number,
+    height?: number,
+    radialSegments?: number,
+  ];
+  color: string;
+  opacity: number;
+  transparent: boolean;
+  currentWidth: number;
+  mesh: MutableRefObject<THREE.Mesh>;
 };
 
-export const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth }: SphereCubeTypes) => {
+type TorusTypes = {
+  args: [
+    radius?: number,
+    tube?: number,
+    radialSegments?: number,
+    tubularSegments?: number,
+  ];
+  color: string;
+  opacity: number;
+  transparent: boolean;
+  currentWidth: number;
+  mesh: MutableRefObject<THREE.Mesh>;
+};
+
+export const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth, edges }: SphereCubeTypes) => {
   return (
     <mesh ref={mesh} scale={currentWidth}>
       <sphereGeometry args={args} />
@@ -121,6 +137,7 @@ export const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth }
         opacity={opacity}
         transparent={transparent}
       />
+      {edges && <Edges color="white" threshold={2} />}
     </mesh>
   );
 };
@@ -134,34 +151,65 @@ export const Cube = ({ args, color, opacity, transparent, mesh, currentWidth }: 
         opacity={opacity}
         transparent={transparent}
       />
+      <Edges color="white" threshold={15} />
     </mesh>
   );
 };
 
 export const Tetrahedron = ({ args, color, opacity, transparent, mesh, currentWidth }: TetrahedronTypes) => {
-    return (
-        <mesh ref={mesh} scale={currentWidth}>
-            <tetrahedronGeometry args={args} />
-            <meshStandardMaterial
-                color={color}
-                opacity={opacity}
-                transparent={transparent}
-            />
-        </mesh>
-    );
+  return (
+    <mesh ref={mesh} scale={currentWidth}>
+      <tetrahedronGeometry args={args} />
+      <meshStandardMaterial
+        color={color}
+        opacity={opacity}
+        transparent={transparent}
+      />
+      <Edges color="white" threshold={15} />
+    </mesh>
+  );
+};
+
+export const Pyramid = ({ args, color, opacity, transparent, mesh, currentWidth }: CylinderTypes) => {
+  return (
+    <mesh ref={mesh} scale={currentWidth}>
+      <coneGeometry args={args} />
+      <meshStandardMaterial
+        color={color}
+        opacity={opacity}
+        transparent={transparent}
+      />
+      <Edges color="white" threshold={15} />
+    </mesh>
+  );
 };
 
 export const Cylinder = ({ args, color, opacity, transparent, mesh, currentWidth }: CylinderTypes) => {
-    return (
-        <mesh ref={mesh} scale={currentWidth}>
-            <cylinderGeometry args={args} />
-            <meshStandardMaterial
-                color={color}
-                opacity={opacity}
-                transparent={transparent}
-            />
-        </mesh>
-    );
+  return (
+    <mesh ref={mesh} scale={currentWidth}>
+      <cylinderGeometry args={args} />
+      <meshStandardMaterial
+        color={color}
+        opacity={opacity}
+        transparent={transparent}
+      />
+      <Edges color="white" threshold={15} />
+    </mesh>
+  );
+};
+
+export const Torus = ({ args, color, opacity, transparent, mesh, currentWidth }: TorusTypes) => {
+  return (
+    <mesh ref={mesh} scale={currentWidth}>
+      <torusGeometry args={args} />
+      <meshStandardMaterial
+        color={color}
+        opacity={opacity}
+        transparent={transparent}
+      />
+      <Edges color="white" threshold={1} />
+    </mesh>
+  );
 };
 
 export default Model;
