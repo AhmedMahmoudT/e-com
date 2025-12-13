@@ -2,10 +2,25 @@
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import Model from "./_components/Model";
-import { useEffect, useMemo, useState } from "react";
-import Product from "./_components/Product";
+import { useEffect, useState } from "react";
+import ProductDetails from "./_components/Product";
 import { AnimatePresence, motion } from "motion/react";
-import Loader from "./_components/Loader";
+
+export const bgColor = (color: string | undefined) => {
+    return `bg-[${color}]`;
+  }
+
+  export const hoverColor = (color: string | undefined) => {
+    return 'hover:' + bgColor(color);
+  }
+
+  export const textColor = (color: string | undefined) => {
+    return `text-[${color}]`;
+  }
+
+  export const borderColor = (color: string | undefined) => {
+    return `border-[${color}]`;
+  }
 
 export default function HomePage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, index: -1 });
@@ -82,54 +97,43 @@ export default function HomePage() {
     big: boolean;
     animating: boolean;
     price: number;
+    id: number;
+    color: string;
   };
 
-  const colors = useMemo(() => {
-    return [
-      {color:"#008BDE", bg:"bg-[#008BDE]", hover:"hover:bg-[#008BDE]", text:"text-[#008BDE]", border:"border-[#008BDE]"},
-      {color:"#DE0088", bg:"bg-[#DE0088]", hover:"hover:bg-[#DE0088]", text:"text-[#DE0088]", border:"border-[#DE0088]"},
-      {color:"#00DE88", bg:"bg-[#00DE88]", hover:"hover:bg-[#00DE88]", text:"text-[#00DE88]", border:"border-[#00DE88]"},
-      {color:"#ffac1c", bg:"bg-[#ffac1c]", hover:"hover:bg-[#ffac1c]", text:"text-[#ffac1c]", border:"border-[#ffac1c]"},
-      {color:"#280cc7", bg:"bg-[#280cc7]", hover:"hover:bg-[#280cc7]", text:"text-[#280cc7]", border:"border-[#280cc7]"},
-      {color:"#c70a23", bg:"bg-[#c70a23]", hover:"hover:bg-[#c70a23]", text:"text-[#c70a23]", border:"border-[#c70a23]"},
-    ];
-  }, []);
 
-  const [Shapes, setShapes] = useState<Shape[]>([
-    { shape: "Cube", args: [3, 3, 3], big: false, animating: false, price: 2500 },
-    { shape: "Tetrahedron", args: [3, 0], big: false, animating: false, price: 3000 },
-    { shape: "Cylinder", args: [1.5, 1.5, 3, 32], big: false, animating: false, price: 1750 },
-    { shape: "Sphere", args: [2.5, 12, 12], big: false, animating: false, price: 4000 },
-    { shape: "Torus", args: [2, 1, 32, 32], big: false, animating: false, price: 4500 },
-    { shape: "Pyramid", args: [3, 3, 4, 3], big: false, animating: false, price: 3000 }
+  const [shapes, setShapes] = useState<Shape[]>([
+    { id: 0, shape: "Cube", args: [3, 3, 3], big: false, color: '#008BDE', animating: false, price: 2500 },
+    { id: 1, shape: "Tetrahedron", args: [3, 0], big: false, color: '#DE0088', animating: false, price: 3000 },
+    { id: 2, shape: "Cylinder", args: [1.5, 1.5, 3, 32], big: false, color: '#00DE88', animating: false, price: 1750 },
+    { id: 3, shape: "Sphere", args: [2.5, 12, 12], big: false, color: '#ffac1c', animating: false, price: 4000 },
+    { id: 4, shape: "Torus", args: [2, 1, 32, 32], big: false, color: '#280cc7', animating: false, price: 4500 },
+    { id: 5, shape: "Pyramid", args: [3, 3, 4, 3], big: false, color: '#c70a23', animating: false, price: 3000 }
   ])
 
 
   useEffect(() => {
     setTimeout(() => {
-      if (colorIndex >= colors.length - 1) {
+      if (colorIndex >= shapes.length - 1) {
         setColorIndex(0);
       } else {
         setColorIndex(colorIndex + 1);
       }
     }, 3000);
-  }, [colorIndex, colors])
+  }, [colorIndex, shapes])
 
   return (
     <main>
-      {/* Loading screen for 3D models */}
-      <Loader />
-
       {/* Black overlay background */}
       <AnimatePresence>
-        {Shapes.some(shape => shape.big) && (
+        {shapes.some(shape => shape.big) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={() => {
-              const expandedIndex = Shapes.findIndex(shape => shape.big);
+              const expandedIndex = shapes.findIndex(shape => shape.big);
               if (expandedIndex !== -1) {
                 handleClick(expandedIndex);
               }
@@ -146,14 +150,14 @@ export default function HomePage() {
         onMouseLeave={handleModelMouseLeave}
       >
         <div
-          className={`absolute top-0 -z-10 h-[75vh] w-full ${colors[colorIndex]?.bg}`}
+          className={`absolute top-0 -z-10 h-[75vh] w-full ${bgColor(shapes[colorIndex]?.color)}`}
         />
         <Canvas style={{ width: "100vw", height: "60vh", position: "absolute", top: "10vh" }}>
           <ambientLight intensity={0.5} />
           <Environment
             preset="park"
           />
-          <Model color={colors[colorIndex]?.color} mouseX={modelMousePosition.x} isHovering={modelIsHovering} />
+          <Model color={shapes[colorIndex]?.color} mouseX={modelMousePosition.x} isHovering={modelIsHovering} />
         </Canvas>
       </div>
 
@@ -163,105 +167,19 @@ export default function HomePage() {
           <h2 className="text-4xl font-bold text-gray-700">Our Collections</h2>
           <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
 
-            {Shapes.map((shape, index) => (
-              <div
-                onClick={() => !shape.big && handleClick(index)}
-                key={index}
-                className="flex flex-col items-center justify-center relative"
-              >
-                {/* Details */}
-                <AnimatePresence>
-                  {shape.big && <motion.div
-                    initial={{
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(0%, -50%)",
-                      position: "fixed",
-                      zIndex: 1,
-                      width: "60vh",
-                      height: "60vh",
-                    }}
-                    animate={{
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-100%, -50%)",
-                      position: "fixed",
-                      zIndex: 1,
-                      width: "60vh",
-                      height: "60vh",
-                    }}
-                    transition={{
-                      top: { duration: 0 },
-                      left: { duration: 0 },
-                      width: { duration: 0 },
-                      height: { duration: 0 },
-                      position: { duration: 0 },
-                      transform: { duration: .5, type: "spring", stiffness: 50 },
-                      default: { duration: .5, ease: "easeInOut" }
-                    }}
-                    onAnimationComplete={() => handleAnimationComplete(index)}
-                    className={`bg-white flex flex-col items-center justify-center gap-10 p-20`}
-                  >
-                    <div className="w-full flex gap-12">
-                      <p className="font-bold">{shape.shape}</p>
-                      <p>{shape.price} ¤</p>
-                    </div>
-                    <p className="mb-20">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi a porro, repellendus ab fugiat placeat laboriosam iusto similique possimus veniam.</p>
-                    <button className={`${colors[index]?.hover} hover:text-white border ${colors[index]?.text} ${colors[index]?.border} text-white py-3 px-6 transition-all`}>Add To Cart</button>
-                  </motion.div>}
-                </AnimatePresence>
-                {/* Shape Background */}
-                <motion.div
-                  onMouseMove={(e) => handleMouseMove(e, index)}
-                  onMouseLeave={() => handleMouseLeave(index)}
-                  initial={{ height: "20vh", width: "100%" }}
-                  animate={{
-                    top: shape.big ? "50%" : "0",
-                    left: shape.big ? "50%" : "0",
-                    transform: shape.big ? "translate(0%, -50%)" : "translate(0, 0)",
-                    position: shape.big ? "fixed" : "relative",
-                    zIndex: shape.big ? 1 : 0,
-                    width: shape.big ? "60vh" : "100%",
-                    height: shape.big ? "60vh" : "20vh",
-                  }}
-                  transition={{
-                    top: { duration: 0 },
-                    left: { duration: 0 },
-                    width: { duration: 0 },
-                    height: { duration: 0 },
-                    position: { duration: 0 },
-                    transform: { duration: 0 },
-                    default: { duration: .5, ease: "easeInOut" }
-                  }}
-                  onAnimationComplete={() => handleAnimationComplete(index)}
-                  className={`${colors[index]?.bg}`}
-                />
-                <Canvas
-                  style={{
-                    width: shape.big ? "60vh" : "100%",
-                    height: shape.big ? "60vh" : "20vh",
-                    position: shape.big ? "fixed" : "absolute",
-                    zIndex: shape.big ? 2 : 0,
-                    top: shape.big ? "50%" : "0",
-                    left: shape.big ? "50%" : "0",
-                    transform: shape.big ? "translate(0%, -50%)" : "translate(0, 0)",
-                    pointerEvents: "none",
-                    opacity: shape.animating ? 0 : 1,
-                    transition: "opacity 0"
-                  }}
-                >
-                  <ambientLight intensity={0.5} />
-                  <Environment preset="park" />
-                  <Product
-                    shape={shape.shape}
-                    color={colors[index]?.color}
-                    args={shape.args}
-                    mouseX={mousePosition.index == index ? mousePosition.x : 0}
-                    mouseY={mousePosition.index == index ? mousePosition.y : 0}
-                    isHovering={isHovering == index}
-                  />
-                </Canvas>
-              </div>
+            {shapes.map((shape) => (
+              <ProductDetails
+                key={shape.id}
+                index={shape.id}
+                color={shape.color}
+                isHovering={isHovering === shape.id}
+                mousePosition={mousePosition}
+                handleClick={handleClick}
+                handleAnimationComplete={handleAnimationComplete}
+                handleMouseMove={handleMouseMove}
+                handleMouseLeave={handleMouseLeave}
+                shape={shape}
+              />
             ))}
           </div>
         </section>

@@ -1,8 +1,14 @@
-import { useFrame } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
-import { useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, Text } from "@react-three/drei";
+import { useRef, useState } from "react";
+import { useCart } from "~/contexts/CartContext";
 import type * as THREE from "three";
 import { Cube, Cylinder, Pyramid, Sphere, Tetrahedron, Torus } from "./Model";
+import { AnimatePresence, motion } from "motion/react";
+import {
+    PiCheckFatDuotone
+} from "react-icons/pi";
+import { bgColor, borderColor, hoverColor, textColor } from "../page";
 
 type ProductProps = {
     mouseX: number;
@@ -13,7 +19,7 @@ type ProductProps = {
     args: [number, number, number, number] | [number, number, number] | [number, number];
 };
 
-const Product = ({ mouseX, mouseY, isHovering, shape, color, args }: ProductProps) => {
+export const Product = ({ mouseX, mouseY, isHovering, shape, color, args }: ProductProps) => {
     const mesh = useRef<THREE.Mesh>(null!);
 
     useFrame(() => {
@@ -42,7 +48,7 @@ const Product = ({ mouseX, mouseY, isHovering, shape, color, args }: ProductProp
         transparent: true,
         currentWidth: 1,
         mesh,
-        edges:true
+        edges: true
     };
 
     const tetrahedronProps = {
@@ -84,4 +90,150 @@ const Product = ({ mouseX, mouseY, isHovering, shape, color, args }: ProductProp
     );
 };
 
-export default Product;
+type ProductDetailsProps = {
+    mousePosition: { x: number; y: number; index: number };
+    isHovering: boolean;
+    color: string;
+    shape: { id: number; animating: boolean; big: boolean; shape: "Sphere" | "Cube" | "Tetrahedron" | "Cylinder" | "Torus" | "Pyramid"; price: number, args: [number, number, number, number] | [number, number, number] | [number, number] };
+    handleClick: (index: number) => void;
+    handleAnimationComplete: (index: number) => void;
+    handleMouseMove: (e: React.MouseEvent<HTMLDivElement>, index: number) => void;
+    handleMouseLeave: (index: number) => void;
+    index: number;
+};
+
+const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, handleAnimationComplete, handleMouseMove, handleMouseLeave, index }: ProductDetailsProps) => {
+    const { addItem, updateQuantity, items } = useCart();
+
+    const addToCart = () => {
+        addItem({
+            id: shape.id.toString(),
+            shape: shape.shape,
+            price: shape.price,
+            color: color,
+        });
+    }
+
+    return (
+        <div
+            onClick={() => !shape.big && handleClick(index)}
+            className="flex flex-col items-center justify-center relative"
+        >
+            {/* Details */}
+            <AnimatePresence>
+                {shape.big && <motion.div
+                    initial={{
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(0%, -50%)",
+                        position: "fixed",
+                        zIndex: 1,
+                        width: "60vh",
+                        height: "60vh",
+                    }}
+                    animate={{
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-100%, -50%)",
+                        position: "fixed",
+                        zIndex: 1,
+                        width: "60vh",
+                        height: "60vh",
+                    }}
+                    transition={{
+                        top: { duration: 0 },
+                        left: { duration: 0 },
+                        width: { duration: 0 },
+                        height: { duration: 0 },
+                        position: { duration: 0 },
+                        transform: { duration: .5, type: "spring", stiffness: 50 },
+                        default: { duration: .5, ease: "easeInOut" }
+                    }}
+                    onAnimationComplete={() => handleAnimationComplete(index)}
+                    className={`bg-white flex flex-col items-center justify-center gap-10 p-20`}
+                >
+                    <div className="w-full flex gap-12">
+                        <p className="font-bold">{shape.shape}</p>
+                        <p>{shape.price} ¤</p>
+                    </div>
+                    <p className="mb-20">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi a porro, repellendus ab fugiat placeat laboriosam iusto similique possimus veniam.</p>
+                    <div className="flex w-full justify-between">
+                        <motion.button initial={{ width: 120, height: 48 }} whileTap={{ scale: 0.9 }}
+                            onClick={addToCart} className={`${hoverColor(color)} hover:text-white border ${textColor(color)} ${borderColor(color)} flex items-center justify-center transition-all`}>
+                            <AnimatePresence>
+                                {!items.some(item => item.id === shape.id.toString()) && <motion.div initial={{ width: 0 }} animate={{ width: 88, transition: { delay: .25 } }} exit={{ width: 0 }} className="text-nowrap text-center overflow-hidden">
+                                    Add To Cart
+                                </motion.div>}
+                            </AnimatePresence>
+                            <AnimatePresence>
+                                {items.some(item => item.id === shape.id.toString()) && <motion.div initial={{ width: 0 }} animate={{ width: 88, transition: { delay: .25 } }} exit={{ width: 0 }} className="flex items-center justify-between text-2xl overflow-hidden">
+                                    <span className="text-base">Added</span> <PiCheckFatDuotone />
+                                </motion.div>}
+                            </AnimatePresence>
+                        </motion.button>
+                        <AnimatePresence>
+                            {items.some(item => item.id === shape.id.toString()) && <motion.div initial={{ width: 0 }} animate={{ width: 100, transition: { delay: .25 } }} exit={{ width: 0 }} className={`${textColor(color)} flex items-center justify-between text-2xl overflow-hidden`}>
+                                <button onClick={() => updateQuantity(shape.id.toString(), (items.find(item => item.id === shape.id.toString())?.quantity ?? 0) - 1)}>-</button>
+                                <span>{items.find(item => item.id === shape.id.toString())?.quantity}</span>
+                                <button onClick={() => updateQuantity(shape.id.toString(), (items.find(item => item.id === shape.id.toString())?.quantity ?? 0) + 1)}>+</button>
+                            </motion.div>}
+                        </AnimatePresence>
+                    </div>
+                </motion.div>}
+            </AnimatePresence>
+            {/* Shape Background */}
+            <motion.div
+                onMouseMove={(e) => handleMouseMove(e, index)}
+                onMouseLeave={() => handleMouseLeave(index)}
+                initial={{ height: "20vh", width: "100%" }}
+                animate={{
+                    top: shape.big ? "50%" : "0",
+                    left: shape.big ? "50%" : "0",
+                    transform: shape.big ? "translate(0%, -50%)" : "translate(0, 0)",
+                    position: shape.big ? "fixed" : "relative",
+                    zIndex: shape.big ? 1 : 0,
+                    width: shape.big ? "60vh" : "100%",
+                    height: shape.big ? "60vh" : "20vh",
+                }}
+                transition={{
+                    top: { duration: 0 },
+                    left: { duration: 0 },
+                    width: { duration: 0 },
+                    height: { duration: 0 },
+                    position: { duration: 0 },
+                    transform: { duration: 0 },
+                    default: { duration: .5, ease: "easeInOut" }
+                }}
+                onAnimationComplete={() => handleAnimationComplete(index)}
+                className={`${bgColor(color)}`}
+            />
+            <Canvas
+                style={{
+                    width: shape.big ? "60vh" : "100%",
+                    height: shape.big ? "60vh" : "20vh",
+                    position: shape.big ? "fixed" : "absolute",
+                    zIndex: shape.big ? 2 : 0,
+                    top: shape.big ? "50%" : "0",
+                    left: shape.big ? "50%" : "0",
+                    transform: shape.big ? "translate(0%, -50%)" : "translate(0, 0)",
+                    pointerEvents: "none",
+                    opacity: shape.animating ? 0 : 1,
+                    transition: "opacity 0"
+                }}
+            >
+                <ambientLight intensity={0.5} />
+                <Environment preset="park" />
+                <Product
+                    shape={shape.shape}
+                    color={color}
+                    args={shape.args}
+                    mouseX={mousePosition.index == index ? mousePosition.x : 0}
+                    mouseY={mousePosition.index == index ? mousePosition.y : 0}
+                    isHovering={isHovering}
+                />
+            </Canvas>
+        </div>
+    );
+};
+
+export default ProductDetails;

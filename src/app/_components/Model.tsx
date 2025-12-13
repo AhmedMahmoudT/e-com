@@ -137,7 +137,7 @@ export const Sphere = ({ args, color, opacity, transparent, mesh, currentWidth, 
         opacity={opacity}
         transparent={transparent}
       />
-      {edges && <Edges color="white" threshold={2} />}
+      {edges && <Edges color={color} threshold={2} />}
     </mesh>
   );
 };
@@ -151,7 +151,7 @@ export const Cube = ({ args, color, opacity, transparent, mesh, currentWidth }: 
         opacity={opacity}
         transparent={transparent}
       />
-      <Edges color="white" threshold={15} />
+      <Edges color={color} threshold={15} />
     </mesh>
   );
 };
@@ -165,7 +165,7 @@ export const Tetrahedron = ({ args, color, opacity, transparent, mesh, currentWi
         opacity={opacity}
         transparent={transparent}
       />
-      <Edges color="white" threshold={15} />
+      <Edges color={color} threshold={15} />
     </mesh>
   );
 };
@@ -179,7 +179,7 @@ export const Pyramid = ({ args, color, opacity, transparent, mesh, currentWidth 
         opacity={opacity}
         transparent={transparent}
       />
-      <Edges color="white" threshold={15} />
+      <Edges color={color} threshold={15} />
     </mesh>
   );
 };
@@ -193,7 +193,7 @@ export const Cylinder = ({ args, color, opacity, transparent, mesh, currentWidth
         opacity={opacity}
         transparent={transparent}
       />
-      <Edges color="white" threshold={15} />
+      <Edges color={color} threshold={15} />
     </mesh>
   );
 };
@@ -207,7 +207,7 @@ export const Torus = ({ args, color, opacity, transparent, mesh, currentWidth }:
         opacity={opacity}
         transparent={transparent}
       />
-      <Edges color="white" threshold={1} />
+      <Edges color={color} threshold={1} />
     </mesh>
   );
 };
