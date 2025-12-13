@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Text } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useCart } from "~/contexts/CartContext";
 import type * as THREE from "three";
 import { Cube, Cylinder, Pyramid, Sphere, Tetrahedron, Torus } from "./Model";
@@ -100,9 +100,10 @@ type ProductDetailsProps = {
     handleMouseMove: (e: React.MouseEvent<HTMLDivElement>, index: number) => void;
     handleMouseLeave: (index: number) => void;
     index: number;
+    scale: number;
 };
 
-const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, handleAnimationComplete, handleMouseMove, handleMouseLeave, index }: ProductDetailsProps) => {
+const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, handleAnimationComplete, handleMouseMove, handleMouseLeave, index, scale }: ProductDetailsProps) => {
     const { addItem, updateQuantity, items } = useCart();
 
     const addToCart = () => {
@@ -128,8 +129,8 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                         transform: "translate(0%, -50%)",
                         position: "fixed",
                         zIndex: 1,
-                        width: "60vh",
-                        height: "60vh",
+                        width: (scale==0.5 ? "30vh" : "60vh"),
+                        height: (scale==0.5 ? "30vh" : "60vh")
                     }}
                     animate={{
                         top: "50%",
@@ -137,8 +138,8 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                         transform: "translate(-100%, -50%)",
                         position: "fixed",
                         zIndex: 1,
-                        width: "60vh",
-                        height: "60vh",
+                        width: (scale==0.5 ? "30vh" : "60vh"),
+                        height: (scale==0.5 ? "30vh" : "60vh")
                     }}
                     transition={{
                         top: { duration: 0 },
@@ -150,16 +151,17 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                         default: { duration: .5, ease: "easeInOut" }
                     }}
                     onAnimationComplete={() => handleAnimationComplete(index)}
-                    className={`bg-white flex flex-col items-center justify-center gap-10 p-20`}
+                    style={{scale:scale}}
+                    className={`bg-white flex flex-col ${scale==0.5 ? 'p-10 gap-5' : 'gap-10 p-20 items-center justify-center'}`}
                 >
-                    <div className="w-full flex gap-12">
+                    <div  className="w-full flex gap-12">
                         <p className="font-bold">{shape.shape}</p>
                         <p>{shape.price} ¤</p>
                     </div>
-                    <p className="mb-20">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi a porro, repellendus ab fugiat placeat laboriosam iusto similique possimus veniam.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi a porro, repellendus ab fugiat placeat laboriosam iusto similique possimus veniam.</p>
                     <div className="flex w-full justify-between">
-                        <motion.button initial={{ width: 120, height: 48 }} whileTap={{ scale: 0.9 }}
-                            onClick={addToCart} className={`${hoverColor(color)} hover:text-white border ${textColor(color)} ${borderColor(color)} flex items-center justify-center transition-all`}>
+                        <motion.button initial={{ width: scale==0.5?100:120, height: scale==0.5?40:48 }} whileTap={{ scale: 0.9 }}
+                            onClick={addToCart} className={`${hoverColor(color)} ${scale==0.5 ? 'text-sm px-2' : 'text-base'} hover:text-white border ${textColor(color)} ${borderColor(color)} flex items-center justify-center transition-all`}>
                             <AnimatePresence>
                                 {!items.some(item => item.id === shape.id.toString()) && <motion.div initial={{ width: 0 }} animate={{ width: 88, transition: { delay: .25 } }} exit={{ width: 0 }} className="text-nowrap text-center overflow-hidden">
                                     Add To Cart
@@ -172,7 +174,7 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                             </AnimatePresence>
                         </motion.button>
                         <AnimatePresence>
-                            {items.some(item => item.id === shape.id.toString()) && <motion.div initial={{ width: 0 }} animate={{ width: 100, transition: { delay: .25 } }} exit={{ width: 0 }} className={`${textColor(color)} flex items-center justify-between text-2xl overflow-hidden`}>
+                            {items.some(item => item.id === shape.id.toString()) && <motion.div initial={{ width: 0 }} animate={{ width: 100, transition: { delay: .25 } }} exit={{ width: 0 }} className={`${textColor(color)} ${scale==0.5 && 'scale-75'} flex items-center justify-between text-2xl overflow-hidden`}>
                                 <button onClick={() => updateQuantity(shape.id.toString(), (items.find(item => item.id === shape.id.toString())?.quantity ?? 0) - 1)}>-</button>
                                 <span>{items.find(item => item.id === shape.id.toString())?.quantity}</span>
                                 <button onClick={() => updateQuantity(shape.id.toString(), (items.find(item => item.id === shape.id.toString())?.quantity ?? 0) + 1)}>+</button>
@@ -192,8 +194,8 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                     transform: shape.big ? "translate(0%, -50%)" : "translate(0, 0)",
                     position: shape.big ? "fixed" : "relative",
                     zIndex: shape.big ? 1 : 0,
-                    width: shape.big ? "60vh" : "100%",
-                    height: shape.big ? "60vh" : "20vh",
+                    width: shape.big ? (scale==0.5 ? "30vh" : "60vh") : "100%",
+                    height: shape.big ? (scale==0.5 ? "30vh" : "60vh") : "20vh",
                 }}
                 transition={{
                     top: { duration: 0 },
@@ -209,8 +211,8 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
             />
             <Canvas
                 style={{
-                    width: shape.big ? "60vh" : "100%",
-                    height: shape.big ? "60vh" : "20vh",
+                    width: shape.big ? (scale==0.5?"30vh":"60vh") : "100%",
+                    height: shape.big ? (scale==0.5?"30vh":"60vh") : "20vh",
                     position: shape.big ? "fixed" : "absolute",
                     zIndex: shape.big ? 2 : 0,
                     top: shape.big ? "50%" : "0",

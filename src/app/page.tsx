@@ -17,6 +17,16 @@ export default function HomePage() {
   const [modelMousePosition, setModelMousePosition] = useState({ x: 0, y: 0 });
   const [modelIsHovering, setModelIsHovering] = useState(false);
 
+  const [scale, setScale] = useState(1);
+  // detect screen size to set scale
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setScale(0.5);
+    } else {
+      setScale(1);
+    }
+  }, []);
+
   const handleClick = (index: number) => {
     setShapes((prev) => {
       return prev.map((shape, i) => {
@@ -131,7 +141,7 @@ export default function HomePage() {
       </AnimatePresence>
 
       <div
-        className="h-[70vh]"
+        className={`h-[70vh]`}
         onMouseMove={handleModelMouseMove}
         onMouseLeave={handleModelMouseLeave}
       >
@@ -143,7 +153,7 @@ export default function HomePage() {
           <Environment
             preset="park"
           />
-          <Model color={shapes[colorIndex]?.color} mouseX={modelMousePosition.x} isHovering={modelIsHovering} />
+          <Model scale={scale} color={shapes[colorIndex]?.color} mouseX={modelMousePosition.x} isHovering={modelIsHovering} />
         </Canvas>
       </div>
 
@@ -155,6 +165,7 @@ export default function HomePage() {
 
             {shapes.map((shape) => (
               <ProductDetails
+                scale={scale}
                 key={shape.id}
                 index={shape.id}
                 color={shape.color}
