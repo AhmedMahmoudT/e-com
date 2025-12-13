@@ -12,7 +12,7 @@ import {
 } from "react-icons/pi";
 import { useState } from "react";
 import { useCart } from "~/contexts/CartContext";
-import { bgColor, textColor } from "../page";
+import { bgColor, textColor } from "~/utils/colors";
 
 const Navbar = () => {
   const currentPath = usePathname();

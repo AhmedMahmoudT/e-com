@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import {
     PiCheckFatDuotone
 } from "react-icons/pi";
-import { bgColor, borderColor, hoverColor, textColor } from "../page";
+import { bgColor, borderColor, hoverColor, textColor } from "~/utils/colors";
 
 type ProductProps = {
     mouseX: number;

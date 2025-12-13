@@ -19,7 +19,6 @@ export default function RootLayout({
       <body style={{ backgroundColor: "white" }}>
         <Loader />
         <LayoutClient>
-
           {children}
         </LayoutClient>
       </body>

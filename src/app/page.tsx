@@ -6,21 +6,7 @@ import { useEffect, useState } from "react";
 import ProductDetails from "./_components/Product";
 import { AnimatePresence, motion } from "motion/react";
 
-export const bgColor = (color: string | undefined) => {
-    return `bg-[${color}]`;
-  }
-
-  export const hoverColor = (color: string | undefined) => {
-    return 'hover:' + bgColor(color);
-  }
-
-  export const textColor = (color: string | undefined) => {
-    return `text-[${color}]`;
-  }
-
-  export const borderColor = (color: string | undefined) => {
-    return `border-[${color}]`;
-  }
+import { bgColor } from "~/utils/colors";
 
 export default function HomePage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, index: -1 });
