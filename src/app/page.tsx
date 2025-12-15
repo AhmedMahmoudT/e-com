@@ -13,6 +13,19 @@ export default function HomePage() {
   const [isHovering, setIsHovering] = useState(-1);
   const [colorIndex, setColorIndex] = useState(0);
 
+  const [currentWidth, setCurrentWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCurrentWidth(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   // Separate state for Model component
   const [modelMousePosition, setModelMousePosition] = useState({ x: 0, y: 0 });
   const [modelIsHovering, setModelIsHovering] = useState(false);
@@ -131,14 +144,14 @@ export default function HomePage() {
       </AnimatePresence>
 
       <div
-        className={`h-[18em]`}
+        className={`h-[18em] sm:h-[25em] lg:h-[35em] xl:h-[42em]`}
         onMouseMove={handleModelMouseMove}
         onMouseLeave={handleModelMouseLeave}
       >
         <div
-          className={`absolute top-0 -z-10 min-h-[25em] w-full ${bgColor(shapes[colorIndex]?.color)}`}
+          className={`absolute top-0 -z-10 min-h-[25em] sm:min-h-[32em] lg:min-h-[39em] xl:min-h-[46em] w-full ${bgColor(shapes[colorIndex]?.color)}`}
         />
-        <Canvas style={{ width: "100vw", height: "16em", position: "absolute", top: "8em" }}>
+        <Canvas style={{ width: "100vw", height: currentWidth < 640 ? "16em" : currentWidth < 1024 ? "23em" : currentWidth < 1280 ? "30em" : "37em", position: "absolute", top: "8em" }}>
           <ambientLight intensity={0.5} />
           <Environment
             preset="park"
@@ -147,14 +160,15 @@ export default function HomePage() {
         </Canvas>
       </div>
 
-      <div className="mx-[1em] flex flex-col min-w-[21em] mb-[2em] border border-gray-700 px-[1em] py-[1.5em]">
+      <div className={`mx-auto flex flex-col ${currentWidth<360?'w-[21em]':currentWidth<420?'w-[24em]':currentWidth<500?'w-[27em]':currentWidth<600?'w-[30em]':currentWidth<640?'w-[31em]': currentWidth<750?'w-[44em]':currentWidth<1140?'w-[50em]':'w-[75em]'} mb-[2em] border border-gray-700 px-[1em] py-[1.5em]`}>
         {/* Our Collections */}
         <section>
           <h2 className="font-bold text-[1.4em] text-gray-700">Our Collections</h2>
-          <div className="mt-[2em] grid grid-cols-1 gap-[1em]">
+          <div className={`mt-[2em] grid ${currentWidth<640?'grid-cols-1':currentWidth<1140?'grid-cols-2':'grid-cols-3'} gap-[1em]`}>
 
             {shapes.map((shape) => (
               <ProductDetails
+                currentWidth={currentWidth}
                 key={shape.id}
                 index={shape.id}
                 color={shape.color}

@@ -99,10 +99,11 @@ type ProductDetailsProps = {
     handleAnimationComplete: (index: number) => void;
     handleMouseMove: (e: React.MouseEvent<HTMLDivElement>, index: number) => void;
     handleMouseLeave: (index: number) => void;
+    currentWidth: number;
     index: number;
 };
 
-const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, handleAnimationComplete, handleMouseMove, handleMouseLeave, index }: ProductDetailsProps) => {
+const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, handleAnimationComplete, handleMouseMove, handleMouseLeave, currentWidth, index }: ProductDetailsProps) => {
     const { addItem, updateQuantity, items } = useCart();
 
     const addToCart = () => {
@@ -128,16 +129,16 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                         transform: "translate(-50%, -50%)",
                         position: "fixed",
                         zIndex: 1,
-                        width: "25em",
+                        width: shape.big ? (currentWidth < 640 ? "25em" : currentWidth < 750 ? "30em" : "30em") : (currentWidth < 640 ? "calc(10em + 40vw)" : currentWidth < 750 ? "20em" : "23em"),
                         height: "16em"
                     }}
                     animate={{
                         top: "50%",
                         left: "50%",
-                        transform: "translate(-50%, 22%)",
+                        transform: "translate(-50%, 39%)",
                         position: "fixed",
                         zIndex: 1,
-                        width: "25em",
+                        width: shape.big ? (currentWidth < 640 ? "25em" : currentWidth < 750 ? "30em" : "30em") : (currentWidth < 640 ? "calc(10em + 40vw)" : currentWidth < 750 ? "20em" : "23em"),
                         height: "16em"
                     }}
                     transition={{
@@ -192,8 +193,8 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                     transform: shape.big ? "translate(-50%, -75%)" : "translate(0, 0)",
                     position: shape.big ? "fixed" : "relative",
                     zIndex: shape.big ? 1 : 0,
-                    width: shape.big?"25em":"18em",
-                    height: shape.big?"13rem":"10em",
+                    width: shape.big?(currentWidth<640?"25em":currentWidth<750?"30em":"30em"):(currentWidth<640?"calc(10em + 40vw)":currentWidth<750?"20em":"23em"),
+                    height: shape.big?(currentWidth<640?"25em":currentWidth<750?"30em":"30em"):(currentWidth<640?"calc(10em + 10vw)":"15em"),
                 }}
                 transition={{
                     top: { duration: 0 },
@@ -209,8 +210,8 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
             />
             <Canvas
                 style={{
-                    width: shape.big?"25em":"18em",
-                    height: shape.big?"13em":"10em",
+                    width: shape.big?(currentWidth<640?"25em":currentWidth<750?"30em":"30em"):(currentWidth<640?"calc(10em + 40vw)":currentWidth<750?"20em":"23em"),
+                    height: shape.big?(currentWidth<640?"25em":currentWidth<750?"30em":"30em"):(currentWidth<640?"calc(10em + 10vw)":"15em"),
                     position: shape.big ? "fixed" : "absolute",
                     zIndex: shape.big ? 2 : 0,
                     top: shape.big ? "50%" : "0",
