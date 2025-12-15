@@ -17,16 +17,6 @@ export default function HomePage() {
   const [modelMousePosition, setModelMousePosition] = useState({ x: 0, y: 0 });
   const [modelIsHovering, setModelIsHovering] = useState(false);
 
-  const [scale, setScale] = useState(1);
-  // detect screen size to set scale
-  useEffect(() => {
-    if (window.innerWidth < 1024) {
-      setScale(0.5);
-    } else {
-      setScale(1);
-    }
-  }, []);
-
   const handleClick = (index: number) => {
     setShapes((prev) => {
       return prev.map((shape, i) => {
@@ -119,7 +109,7 @@ export default function HomePage() {
   }, [colorIndex, shapes])
 
   return (
-    <main>
+    <main className="">
       {/* Black overlay background */}
       <AnimatePresence>
         {shapes.some(shape => shape.big) && (
@@ -141,31 +131,30 @@ export default function HomePage() {
       </AnimatePresence>
 
       <div
-        className={`h-[70vh]`}
+        className={`h-[18em]`}
         onMouseMove={handleModelMouseMove}
         onMouseLeave={handleModelMouseLeave}
       >
         <div
-          className={`absolute top-0 -z-10 h-[75vh] w-full ${bgColor(shapes[colorIndex]?.color)}`}
+          className={`absolute top-0 -z-10 min-h-[25em] w-full ${bgColor(shapes[colorIndex]?.color)}`}
         />
-        <Canvas style={{ width: "100vw", height: "60vh", position: "absolute", top: "10vh" }}>
+        <Canvas style={{ width: "100vw", height: "16em", position: "absolute", top: "8em" }}>
           <ambientLight intensity={0.5} />
           <Environment
             preset="park"
           />
-          <Model scale={scale} color={shapes[colorIndex]?.color} mouseX={modelMousePosition.x} isHovering={modelIsHovering} />
+          <Model color={shapes[colorIndex]?.color} mouseX={modelMousePosition.x} isHovering={modelIsHovering} />
         </Canvas>
       </div>
 
-      <div className="flex flex-col mx-[10vw] gap-10 mb-24 border border-gray-700 rounded-lg p-8">
+      <div className="mx-[1em] flex flex-col min-w-[21em] mb-[2em] border border-gray-700 px-[1em] py-[1.5em]">
         {/* Our Collections */}
         <section>
-          <h2 className="text-4xl font-bold text-gray-700">Our Collections</h2>
-          <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+          <h2 className="font-bold text-[1.4em] text-gray-700">Our Collections</h2>
+          <div className="mt-[2em] grid grid-cols-1 gap-[1em]">
 
             {shapes.map((shape) => (
               <ProductDetails
-                scale={scale}
                 key={shape.id}
                 index={shape.id}
                 color={shape.color}

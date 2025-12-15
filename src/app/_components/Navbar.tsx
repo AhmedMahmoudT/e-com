@@ -14,24 +14,16 @@ import { useState } from "react";
 import { useCart } from "~/contexts/CartContext";
 import { bgColor, textColor } from "~/utils/colors";
 
-const Navbar = () => {
-  const currentPath = usePathname();
-  const [cartOpen, setCartOpen] = useState(false);
+const Cart = ({cartOpen, showCart}: {cartOpen: boolean, showCart: () => void}) => {
   const { items, total, updateQuantity, removeItem } = useCart();
-
-  const showCart = () => {
-    setCartOpen(!cartOpen);
-  }
   return (
-    <div className="flex w-full flex-col items-center justify-center">
-      {/* Cart */}
-      <AnimatePresence>
+    <AnimatePresence>
         {cartOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={showCart} className="fixed top-0 left-0 z-50 flex h-screen w-screen items-center justify-center bg-black/50">
-            <div onScroll={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="flex h-[80vh] w-[80vw] flex-col items-center justify-start overflow-hidden bg-white p-10">
+            <div onScroll={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="flex h-[50em] w-[26em] flex-col items-center justify-start overflow-hidden bg-white p-10">
               <div className="mb-8 flex w-full items-center justify-between border-b pb-4">
-                <h2 className="text-3xl font-bold uppercase tracking-widest">Cart ({items.length})</h2>
-                <button onClick={showCart} className="text-xl hover:text-gray-500">CLOSE</button>
+                <h2 className="text-xl text-black font-bold uppercase tracking-widest">Cart ({items.length})</h2>
+                <button onClick={showCart} className="text-black hover:text-gray-500">CLOSE</button>
               </div>
 
               {items.length === 0 ? (
@@ -44,17 +36,13 @@ const Navbar = () => {
                 </div>
               ) : (
                 <>
-                  <div className="flex w-full flex-1 flex-col gap-6 overflow-y-auto pr-4">
+                  <div className="flex w-full flex-1 flex-col gap-6">
                     {items.map((item) => (
-                      <div key={item.id} className={`flex items-center justify-between gap-4 border-b pb-6`}>
+                      <div key={item.id} className={`flex items-center justify-between border-b pb-6`}>
                         <div className="flex items-center gap-6">
-                          <div className={`h-24 w-24 rounded-lg ${bgColor(item.color)} bg-opacity-20 flex items-center justify-center`}>
-                            <span className={`font-bold ${textColor(item.color)}`}>{item.shape.slice(0, 2)}</span>
-                          </div>
-                          <div className="flex flex-col">
-                            <h3 className="text-xl font-bold">{item.shape}</h3>
-                            <p className={`text-sm ${textColor(item.color)}`}>{item.color}</p>
-                            <p className="mt-1 font-semibold">{item.price} ¤</p>
+                          <div className="flex flex-col text-black">
+                            <h3 className={`text-base font-bold ${textColor(item.color)}`}>{item.shape}</h3>
+                            <p className="mt-1 text-xs font-semibold">{item.price} ¤</p>
                           </div>
                         </div>
 
@@ -86,7 +74,20 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+  )
+}
 
+const Navbar = ({cartOpen, setCartOpen}: {cartOpen: boolean, setCartOpen: (open: boolean) => void}) => {
+  const currentPath = usePathname();
+  const { total } = useCart();
+
+  const showCart = () => {
+    setCartOpen(!cartOpen);
+  }
+  return (
+    <div className="flex w-full flex-col items-center justify-center">
+      {/* Cart */}
+      <Cart cartOpen={cartOpen} showCart={showCart}/>
       <div className="flex h-12 w-full items-center justify-center bg-black/50 text-white">
         <div className="flex w-[70vw] items-center justify-between">
           <p>Free shipping, 30-day return or refund guarantee.</p>
@@ -156,10 +157,19 @@ const Navbar = () => {
 
 export default Navbar;
 
-export const NavbarMobile = () => {
+export const NavbarMobile = ({cartOpen, setCartOpen}: {cartOpen: boolean, setCartOpen: (open: boolean) => void}) => {
   const [menu, setMenu] = useState(false);
+  const { total } = useCart();
+
+
+  const showCart = () => {
+    console.log("showCart: ", cartOpen);
+    setCartOpen(!cartOpen);
+  };
+
   return (
     <div className="flex w-screen flex-col items-center justify-center text-white overflow-hidden">
+      <Cart cartOpen={cartOpen} showCart={showCart}/>
       <div className="flex w-full flex-col items-center justify-between bg-black/50 py-4 text-center">
         <p>Free shipping, 30-day return or refund guarantee.</p>
       </div>
@@ -170,7 +180,7 @@ export const NavbarMobile = () => {
         <div className="flex items-center justify-center gap-4 text-2xl">
           <PiMagnifyingGlassDuotone />
           <PiHeartDuotone />
-          <PiBagDuotone />
+          <PiBagDuotone onClick={showCart} />
           <div
             onClick={() => setMenu(!menu)}
             className="flex cursor-pointer flex-col items-center justify-center gap-1"

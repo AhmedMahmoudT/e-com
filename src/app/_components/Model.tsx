@@ -7,10 +7,9 @@ type ModelProps = {
   mouseX: number;
   isHovering: boolean;
   color: string | undefined;
-  scale: number;
 };
 
-const Model = ({ mouseX, isHovering, color, scale }: ModelProps) => {
+const Model = ({ mouseX, isHovering, color }: ModelProps) => {
   const mesh = useRef<THREE.Mesh>(null!);
   const [x, setX] = useState(1);
   const [y, setY] = useState(1);
@@ -52,14 +51,14 @@ const Model = ({ mouseX, isHovering, color, scale }: ModelProps) => {
     <group>
       <Text
         position={[0, 0, -5]}
-        fontSize={1.75*scale}
+        fontSize={1.75}
         font="fonts/DelaGothicOne-Regular.ttf"
       >
         Discover your Taest
       </Text>
 
       <Sphere
-        args={[3*scale, x, y]}
+        args={[3, x, y]}
         color={color ?? "#008BDE"}
         opacity={0.5}
         transparent={true}
