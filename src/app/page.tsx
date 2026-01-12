@@ -7,6 +7,8 @@ import ProductDetails from "./_components/Product";
 import { AnimatePresence, motion } from "motion/react";
 
 import { bgColor } from "~/utils/colors";
+import { INITIAL_SHAPES, type ProductShape } from "~/data/products";
+import Link from "next/link";
 
 export default function HomePage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, index: -1 });
@@ -105,25 +107,7 @@ export default function HomePage() {
     setModelIsHovering(false);
   };
 
-  type Shape = {
-    shape: 'Cube' | 'Tetrahedron' | 'Cylinder' | 'Sphere' | 'Torus' | 'Pyramid';
-    args: [number, number, number, number] | [number, number, number] | [number, number];
-    big: boolean;
-    animating: boolean;
-    price: number;
-    id: number;
-    color: string;
-  };
-
-
-  const [shapes, setShapes] = useState<Shape[]>([
-    { id: 0, shape: "Cube", args: [3, 3, 3], big: false, color: '#008BDE', animating: false, price: 2500 },
-    { id: 1, shape: "Tetrahedron", args: [3, 0], big: false, color: '#DE0088', animating: false, price: 3000 },
-    { id: 2, shape: "Cylinder", args: [1.5, 1.5, 3, 32], big: false, color: '#00DE88', animating: false, price: 1750 },
-    { id: 3, shape: "Sphere", args: [2.5, 12, 12], big: false, color: '#ffac1c', animating: false, price: 4000 },
-    { id: 4, shape: "Torus", args: [2, 1, 32, 32], big: false, color: '#280cc7', animating: false, price: 4500 },
-    { id: 5, shape: "Pyramid", args: [3, 3, 4, 3], big: false, color: '#c70a23', animating: false, price: 3000 }
-  ])
+  const [shapes, setShapes] = useState<ProductShape[]>(INITIAL_SHAPES);
 
 
   useEffect(() => {
@@ -179,7 +163,10 @@ export default function HomePage() {
       <div className={`mx-auto flex flex-col ${currentWidth < 360 ? 'w-[21em]' : currentWidth < 420 ? 'w-[24em]' : currentWidth < 500 ? 'w-[27em]' : currentWidth < 600 ? 'w-[30em]' : currentWidth < 640 ? 'w-[31em]' : currentWidth < 750 ? 'w-[44em]' : currentWidth < 1140 ? 'w-[50em]' : 'w-[75em]'} mb-[2em] border border-gray-700 px-[1em] py-[1.5em]`}>
         {/* Our Collections */}
         <section>
-          <h2 className="font-bold text-[1.4em] text-gray-700">Our Collections</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-[1.4em] text-gray-700 uppercase tracking-widest">Our Collections</h2>
+            <Link href="/shop" className="text-sm font-bold text-gray-400 hover:text-black transition-colors uppercase tracking-widest px-2 border border-gray-200 hover:border-black py-1">View All</Link>
+          </div>
           <div className={`mt-[2em] grid ${currentWidth < 640 ? 'grid-cols-1' : currentWidth < 1140 ? 'grid-cols-2' : 'grid-cols-3'} gap-[1em]`}>
 
             {shapes.map((shape) => (

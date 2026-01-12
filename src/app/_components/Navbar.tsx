@@ -63,7 +63,7 @@ const Cart = ({ cartOpen, showCart }: { cartOpen: boolean, showCart: () => void 
                 <div className="mt-8 flex w-full flex-col gap-6 border-t pt-8">
                   <div className="flex items-center justify-between text-2xl font-bold">
                     <p>Total</p>
-                    <p>${total.toFixed(2)}</p>
+                    <p>{total.toFixed(2)} ¤</p>
                   </div>
                   <Link
                     href="/checkout"
@@ -173,11 +173,11 @@ export default Navbar;
 
 export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, setCartOpen: (open: boolean) => void }) => {
   const [menu, setMenu] = useState(false);
+  const currentPath = usePathname();
   const { user, logout } = useAuth();
 
 
   const showCart = () => {
-    console.log("showCart: ", cartOpen);
     setCartOpen(!cartOpen);
   };
 
@@ -187,7 +187,7 @@ export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, set
       <div className="flex w-full flex-col items-center justify-between bg-black/50 py-4 text-center">
         <p>Free shipping, 30-day return or refund guarantee.</p>
       </div>
-      <div className="flex h-20 w-[90vw] items-center justify-between tracking-widest">
+      <div className={`flex h-20 w-full px-[5vw] items-center justify-between tracking-widest ${currentPath !== "/" && "bg-black"}`}>
         <Link href={"/"} className="text-2xl font-bold tracking-widest">
           Taest
         </Link>
@@ -197,7 +197,7 @@ export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, set
           <PiBagDuotone onClick={showCart} />
           <div
             onClick={() => setMenu(!menu)}
-            className="flex cursor-pointer flex-col items-center justify-center gap-1"
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 ${menu?'z-50':'z-0'}`}
           >
             <motion.div
               initial={{ rotate: 0, y: 0 }}
@@ -222,10 +222,10 @@ export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, set
       <AnimatePresence>
         {menu && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="flex w-full flex-col items-center gap-6 bg-black pb-8 uppercase tracking-widest"
+            initial={{ opacity: 0}}
+            animate={{ opacity: 1}}
+            exit={{ opacity: 0}}
+            className={`flex h-screen w-full flex-col items-center justify-center absolute top-0 right-0 z-40 bg-black/50 backdrop-blur-lg gap-6 pb-8 uppercase tracking-widest`}
           >
             <Link href="/" onClick={() => setMenu(false)}>Home</Link>
             <Link href="/shop" onClick={() => setMenu(false)}>Shop</Link>

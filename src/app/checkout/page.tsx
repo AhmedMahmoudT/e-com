@@ -234,7 +234,7 @@ const CheckoutPage = () => {
                                 className="group relative w-full overflow-hidden rounded-full bg-black py-6 text-xl font-bold text-white transition-all hover:bg-gray-900 disabled:opacity-50"
                             >
                                 <span className={isSubmitting ? 'opacity-0' : 'opacity-100'}>
-                                    PLACE ORDER — ${total.toFixed(2)}
+                                    PLACE ORDER — {total.toFixed(2)} ¤
                                 </span>
                                 {isSubmitting && (
                                     <div className="absolute inset-0 flex items-center justify-center">
@@ -266,7 +266,7 @@ const CheckoutPage = () => {
                                                 <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                                             </div>
                                         </div>
-                                        <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                                        <p className="font-bold">{(item.price * item.quantity).toFixed(2)} ¤</p>
                                     </div>
                                 ))}
                             </div>
@@ -274,7 +274,7 @@ const CheckoutPage = () => {
                             <div className="mt-8 space-y-4 border-t border-gray-200 pt-8">
                                 <div className="flex justify-between text-gray-500">
                                     <span>Subtotal</span>
-                                    <span>${total.toFixed(2)}</span>
+                                    <span>{total.toFixed(2)} ¤</span>
                                 </div>
                                 <div className="flex justify-between text-gray-500">
                                     <span>Shipping</span>
@@ -282,7 +282,7 @@ const CheckoutPage = () => {
                                 </div>
                                 <div className="flex justify-between pt-4 text-2xl font-bold">
                                     <span>Total</span>
-                                    <span>${total.toFixed(2)}</span>
+                                    <span>{total.toFixed(2)} ¤</span>
                                 </div>
                             </div>
 
