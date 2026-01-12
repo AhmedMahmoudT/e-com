@@ -120,7 +120,7 @@ const Navbar = ({ cartOpen, setCartOpen }: { cartOpen: boolean, setCartOpen: (op
           <div className="flex items-center justify-center gap-8 uppercase tracking-widest">
             <Link
               className={`relative text-center ${currentPath == "/" && "font-semibold"} `}
-              href={"/"}
+              href="/"
             >
               Home
               <div
@@ -129,30 +129,27 @@ const Navbar = ({ cartOpen, setCartOpen }: { cartOpen: boolean, setCartOpen: (op
             </Link>
             <Link
               className={`relative text-center ${currentPath == "/shop" && "font-semibold"} `}
-              href={"/shop"}
+              href={currentPath === "/shop" ? "#collections" : "/shop#collections"}
             >
-              Shop
+              Collections
               <div
                 className={`absolute -bottom-[16px] h-[4px] w-full bg-white ${currentPath !== "/shop" && "hidden"}`}
               />
             </Link>
             <Link
-              className={`relative text-center ${currentPath == "/deals" && "font-semibold"} `}
-              href={"/deals"}
+              className={`group relative text-center text-nowrap`}
+              href={currentPath === "/shop" || currentPath === "/" ? "#vault" : "/shop#vault"}
             >
-              Deals
+              The Vault
               <div
-                className={`absolute -bottom-[16px] h-[4px] w-full bg-white ${currentPath !== "/deals" && "hidden"}`}
+                className={`absolute -bottom-[16px] h-[4px] w-full bg-white hidden group-hover:block`}
               />
             </Link>
             <Link
-              className={`relative text-center ${currentPath == "/contact" && "font-semibold"} `}
-              href={"/contact"}
+              className={`relative text-center`}
+              href="#about"
             >
-              Contact
-              <div
-                className={`absolute -bottom-[16px] h-[4px] w-full bg-white ${currentPath !== "/contact" && "hidden"}`}
-              />
+              About
             </Link>
           </div>
           <div className="flex items-center justify-between gap-8 text-2xl">
@@ -228,9 +225,9 @@ export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, set
             className={`flex h-screen w-full flex-col items-center justify-center absolute top-0 right-0 z-40 bg-black/50 backdrop-blur-lg gap-6 pb-8 uppercase tracking-widest`}
           >
             <Link href="/" onClick={() => setMenu(false)}>Home</Link>
-            <Link href="/shop" onClick={() => setMenu(false)}>Shop</Link>
-            <Link href="/deals" onClick={() => setMenu(false)}>Deals</Link>
-            <Link href="/contact" onClick={() => setMenu(false)}>Contact</Link>
+            <Link href={currentPath === "/shop" ? "#collections" : "/shop#collections"} onClick={() => setMenu(false)}>Collections</Link>
+            <Link href={currentPath === "/shop" || currentPath === "/" ? "#vault" : "/shop#vault"} onClick={() => setMenu(false)}>The Vault</Link>
+            <Link href="#about" onClick={() => setMenu(false)}>About</Link>
             <div className="h-[1px] w-1/2 bg-white/20 my-2" />
             {user ? (
               <div className="flex flex-col items-center gap-6">

@@ -163,7 +163,7 @@ export default function HomePage() {
 
       <div className={`mx-auto flex flex-col ${currentWidth < 360 ? 'w-[21em]' : currentWidth < 420 ? 'w-[24em]' : currentWidth < 500 ? 'w-[27em]' : currentWidth < 600 ? 'w-[30em]' : currentWidth < 640 ? 'w-[31em]' : currentWidth < 750 ? 'w-[44em]' : currentWidth < 1140 ? 'w-[50em]' : 'w-[75em]'} mb-[2em] border border-gray-700 px-[1em] py-[1.5em]`}>
         {/* Our Collections */}
-        <section>
+        <section id="collections">
           <div className="flex items-center justify-between">
             <h2 className="font-bold text-[1.4em] text-gray-700 uppercase tracking-widest">Our Collections</h2>
             <Link href="/shop" className="text-sm font-bold text-gray-400 hover:text-black transition-colors uppercase tracking-widest px-2 border border-gray-200 hover:border-black py-1">View All</Link>
@@ -191,10 +191,10 @@ export default function HomePage() {
         </section>
 
         {/* The Artifact Vault */}
-        <section className="mt-[4em]">
+        <section id="vault" className="mt-[4em]">
           <div className="flex flex-col mb-12">
-            <h2 className="font-bold text-[2em] text-white uppercase tracking-[0.2em]">The Artifact Vault</h2>
-            <div className="h-[1px] w-24 bg-white mt-4" />
+            <h2 className="font-bold text-[2em] text-black uppercase tracking-[0.2em]">The Artifact Vault</h2>
+            <div className="h-[1px] w-24 bg-black mt-4" />
             <p className="mt-6 text-gray-500 max-w-xl">
               Explore our most complex digital geometries. Each artifact is a unique procedural sculpture designed for the modern aesthetic.
             </p>

@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import ProductDetails from "../_components/Product";
 import { AnimatePresence, motion } from "motion/react";
-import { INITIAL_SHAPES, type ProductShape } from "~/data/products";
+import { INITIAL_SHAPES, ARTIFACTS, type ProductShape } from "~/data/products";
+import SpecialProduct from "../_components/SpecialProduct";
 
 export default function ShopPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, index: -1 });
@@ -101,12 +102,11 @@ export default function ShopPage() {
       </AnimatePresence>
 
       <div className={`mx-auto flex flex-col ${currentWidth < 360 ? 'w-[21em]' : currentWidth < 420 ? 'w-[24em]' : currentWidth < 500 ? 'w-[27em]' : currentWidth < 600 ? 'w-[30em]' : currentWidth < 640 ? 'w-[31em]' : currentWidth < 750 ? 'w-[44em]' : currentWidth < 1140 ? 'w-[50em]' : 'w-[75em]'} border border-gray-700 px-[1em] py-[1.5em]`}>
-        <section>
+        <section id="collections">
           <div className="flex items-center justify-between mb-8">
             <h1 className="font-bold text-[1.8em] text-gray-700 uppercase tracking-widest px-2">Shop All</h1>
-            <p className="text-sm text-gray-400 uppercase tracking-widest">{shapes.length} Products</p>
+            <p className="text-sm text-gray-400 uppercase tracking-widest">{shapes.length + ARTIFACTS.length} Products</p>
           </div>
-
           <div className={`grid ${currentWidth < 640 ? 'grid-cols-1' : currentWidth < 1140 ? 'grid-cols-2' : 'grid-cols-3'} gap-[1em]`}>
             {shapes.map((shape) => (
               <ProductDetails
@@ -123,6 +123,25 @@ export default function ShopPage() {
                 handleMouseLeave={handleMouseLeave}
                 handleTouchEnd={handleMouseLeave}
                 shape={shape}
+              />
+            ))}
+          </div>
+        </section>
+        <section id="vault" className="mt-[4em]">
+          <div className="flex flex-col mb-12">
+            <h2 className="font-bold text-[2em] text-black uppercase tracking-[0.2em]">The Artifact Vault</h2>
+            <div className="h-[1px] w-24 bg-black mt-4" />
+            <p className="mt-6 text-gray-500 max-w-xl">
+              Our most complex digital geometries. Each artifact is a unique procedural sculpture designed for the modern aesthetic.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {ARTIFACTS.map((artifact) => (
+              <SpecialProduct
+                key={artifact.id}
+                product={artifact}
+                currentWidth={currentWidth}
               />
             ))}
           </div>
