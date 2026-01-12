@@ -42,7 +42,7 @@ const Cart = ({ cartOpen, showCart }: { cartOpen: boolean, showCart: () => void 
                     <div key={item.id} className={`flex items-center justify-between border-b pb-6`}>
                       <div className="flex items-center gap-6">
                         <div className="flex flex-col text-black">
-                          <h3 className={`text-base font-bold ${textColor(item.color)}`}>{item.shape}</h3>
+                          <h3 className={`text-base font-bold ${textColor(item.color)}`}>{item.name ?? item.shape}</h3>
                           <p className="mt-1 text-xs font-semibold">{item.price} ¤</p>
                         </div>
                       </div>
@@ -197,7 +197,7 @@ export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, set
           <PiBagDuotone onClick={showCart} />
           <div
             onClick={() => setMenu(!menu)}
-            className={`flex cursor-pointer flex-col items-center justify-center gap-1 ${menu?'z-50':'z-0'}`}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 ${menu ? 'z-50' : 'z-0'}`}
           >
             <motion.div
               initial={{ rotate: 0, y: 0 }}
@@ -222,9 +222,9 @@ export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, set
       <AnimatePresence>
         {menu && (
           <motion.div
-            initial={{ opacity: 0}}
-            animate={{ opacity: 1}}
-            exit={{ opacity: 0}}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className={`flex h-screen w-full flex-col items-center justify-center absolute top-0 right-0 z-40 bg-black/50 backdrop-blur-lg gap-6 pb-8 uppercase tracking-widest`}
           >
             <Link href="/" onClick={() => setMenu(false)}>Home</Link>

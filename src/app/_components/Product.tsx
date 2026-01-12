@@ -9,12 +9,13 @@ import {
     PiCheckFatDuotone
 } from "react-icons/pi";
 import { bgColor, borderColor, hoverColor, textColor } from "~/utils/colors";
+import { type ShapeType } from "~/data/products";
 
 type ProductProps = {
     mouseX: number;
     mouseY: number;
     isHovering: boolean;
-    shape: 'Cube' | 'Tetrahedron' | 'Cylinder' | 'Sphere' | 'Torus' | 'Pyramid';
+    shape: ShapeType;
     color: string | undefined;
     args: [number, number, number, number] | [number, number, number] | [number, number];
 };
@@ -36,6 +37,8 @@ export const Product = ({ mouseX, mouseY, isHovering, shape, color, args }: Prod
             mesh.current.rotation.y += 0.01;
         }
     });
+
+    if (shape === 'Artifact') return null; // Artifacts handled by SpecialProduct component
 
     const cubeArgs = args as [number, number, number];
     const tetrahedronArgs = args as [number, number];
@@ -94,7 +97,7 @@ type ProductDetailsProps = {
     mousePosition: { x: number; y: number; index: number };
     isHovering: boolean;
     color: string;
-    shape: { id: number; animating: boolean; big: boolean; shape: "Sphere" | "Cube" | "Tetrahedron" | "Cylinder" | "Torus" | "Pyramid"; price: number, args: [number, number, number, number] | [number, number, number] | [number, number] };
+    shape: { id: number; animating: boolean; big: boolean; shape: ShapeType; price: number; name: string, args: [number, number, number, number] | [number, number, number] | [number, number] };
     handleClick: (index: number) => void;
     handleAnimationComplete: (index: number) => void;
     handleMouseMove: (e: React.MouseEvent<HTMLDivElement>, index: number) => void;
@@ -113,6 +116,7 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
             id: shape.id.toString(),
             shape: shape.shape,
             price: shape.price,
+            name: shape.name,
             color: color,
         });
     }
@@ -156,7 +160,7 @@ const ProductDetails = ({ mousePosition, isHovering, color, shape, handleClick, 
                     className={`bg-white flex flex-col gap-[1em] p-[2em] text-justify items-center justify-center`}
                 >
                     <div className="w-full flex gap-12">
-                        <p className="font-bold">{shape.shape}</p>
+                        <p className="font-bold">{shape.name}</p>
                         <p>{shape.price} ¤</p>
                     </div>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi a porro, repellendus ab fugiat placeat laboriosam iusto similique possimus veniam.</p>

@@ -2,9 +2,12 @@
 
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
+import { type ShapeType } from '~/data/products';
+
 export type CartItem = {
     id: string;
-    shape: 'Cube' | 'Tetrahedron' | 'Cylinder' | 'Sphere' | 'Torus' | 'Pyramid';
+    shape: ShapeType;
+    name: string;
     price: number;
     quantity: number;
     color: string;

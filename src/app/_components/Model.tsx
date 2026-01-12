@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
-import { Text, Edges } from "@react-three/drei";
-import { useRef, useState, type MutableRefObject } from "react";
+import { useRef, useState, type MutableRefObject, Suspense } from "react";
+import { Center, Text, Edges, useGLTF } from "@react-three/drei";
 import type * as THREE from "three";
 
 type ModelProps = {
@@ -209,6 +209,30 @@ export const Torus = ({ args, color, opacity, transparent, mesh, currentWidth }:
       />
       <Edges color={color} threshold={1} />
     </mesh>
+  );
+};
+
+export const Artifact = ({ modelPath, mesh, scale = 1 }: { modelPath: string; mesh: MutableRefObject<THREE.Group>, scale?: number }) => {
+  return (
+    <Suspense fallback={<mesh scale={scale}><boxGeometry args={[1, 1, 1]} /><meshStandardMaterial color="white" wireframe /></mesh>}>
+      <group ref={mesh}>
+        <Center>
+          <ArtifactContent modelPath={modelPath} scale={scale} />
+        </Center>
+      </group>
+    </Suspense>
+  );
+};
+
+const ArtifactContent = ({ modelPath, scale = 1 }: { modelPath: string; scale?: number }) => {
+  const { scene } = useGLTF(modelPath);
+  const clonedScene = scene.clone();
+
+  return (
+    <primitive
+      object={clonedScene}
+      scale={scale}
+    />
   );
 };
 

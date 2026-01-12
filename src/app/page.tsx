@@ -7,8 +7,9 @@ import ProductDetails from "./_components/Product";
 import { AnimatePresence, motion } from "motion/react";
 
 import { bgColor } from "~/utils/colors";
-import { INITIAL_SHAPES, type ProductShape } from "~/data/products";
+import { INITIAL_SHAPES, ARTIFACTS, type ProductShape } from "~/data/products";
 import Link from "next/link";
+import SpecialProduct from "./_components/SpecialProduct";
 
 export default function HomePage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, index: -1 });
@@ -189,14 +190,26 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* subscribe to our newsletter */}
-        {/* <section>
-          <h2 className="text-4xl font-bold text-gray-700">Subscribe to our newsletter</h2>
-          <form action="">
-            <input type="email" placeholder="Enter your email" />
-            <button type="submit">Subscribe</button>
-          </form>
-        </section> */}
+        {/* The Artifact Vault */}
+        <section className="mt-[4em]">
+          <div className="flex flex-col mb-12">
+            <h2 className="font-bold text-[2em] text-white uppercase tracking-[0.2em]">The Artifact Vault</h2>
+            <div className="h-[1px] w-24 bg-white mt-4" />
+            <p className="mt-6 text-gray-500 max-w-xl">
+              Explore our most complex digital geometries. Each artifact is a unique procedural sculpture designed for the modern aesthetic.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {ARTIFACTS.map((artifact) => (
+              <SpecialProduct
+                key={artifact.id}
+                product={artifact}
+                currentWidth={currentWidth}
+              />
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );
