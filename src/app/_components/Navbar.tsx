@@ -11,6 +11,7 @@ import {
   PiTrashDuotone,
 } from "react-icons/pi";
 import { useState } from "react";
+import { useAuth } from "~/contexts/AuthContext";
 import { useCart } from "~/contexts/CartContext";
 import { textColor } from "~/utils/colors";
 
@@ -85,6 +86,8 @@ const Navbar = ({ cartOpen, setCartOpen }: { cartOpen: boolean, setCartOpen: (op
   const currentPath = usePathname();
   const { total } = useCart();
 
+  const { user, logout } = useAuth();
+
   const showCart = () => {
     setCartOpen(!cartOpen);
   }
@@ -96,7 +99,14 @@ const Navbar = ({ cartOpen, setCartOpen }: { cartOpen: boolean, setCartOpen: (op
         <div className="flex w-[70vw] items-center justify-between">
           <p>Free shipping, 30-day return or refund guarantee.</p>
           <div className="flex items-center justify-center gap-10 tracking-[.20rem]">
-            <Link href={"/sign-in"}>SIGN IN</Link>
+            {user ? (
+              <div className="flex items-center gap-6">
+                <span className="font-bold uppercase tracking-widest">{user.name}</span>
+                <button onClick={() => logout()} className="hover:text-gray-300">LOGOUT</button>
+              </div>
+            ) : (
+              <Link href={"/sign-in"}>SIGN IN</Link>
+            )}
             <Link href={"/"}>FAQs</Link>
           </div>
         </div>
@@ -163,6 +173,7 @@ export default Navbar;
 
 export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, setCartOpen: (open: boolean) => void }) => {
   const [menu, setMenu] = useState(false);
+  const { user, logout } = useAuth();
 
 
   const showCart = () => {
@@ -206,6 +217,32 @@ export const NavbarMobile = ({ cartOpen, setCartOpen }: { cartOpen: boolean, set
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Content */}
+      <AnimatePresence>
+        {menu && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="flex w-full flex-col items-center gap-6 bg-black pb-8 uppercase tracking-widest"
+          >
+            <Link href="/" onClick={() => setMenu(false)}>Home</Link>
+            <Link href="/shop" onClick={() => setMenu(false)}>Shop</Link>
+            <Link href="/deals" onClick={() => setMenu(false)}>Deals</Link>
+            <Link href="/contact" onClick={() => setMenu(false)}>Contact</Link>
+            <div className="h-[1px] w-1/2 bg-white/20 my-2" />
+            {user ? (
+              <div className="flex flex-col items-center gap-6">
+                <span className="font-bold">{user.name}</span>
+                <button onClick={() => { logout(); setMenu(false); }} className="text-gray-400">LOGOUT</button>
+              </div>
+            ) : (
+              <Link href="/sign-in" onClick={() => setMenu(false)}>SIGN IN / CREATE ACCOUNT</Link>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
